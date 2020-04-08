@@ -4,7 +4,7 @@ services:
     -docker
 
 before_install:
-    -docker build -t kurty0021/react-test -f ./client/Dockerfile ./client
+    - docker build -t kurty0021/react-test -f ./client/Dockerfile ./client
 
 
 script:
