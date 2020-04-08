@@ -1,0 +1,25 @@
+sudo: required
+
+services:
+    -docker
+
+before_install:
+    -docker build -t kurty0021/react-test -f ./client/Dockerfile ./client
+
+
+script:
+    - docker run kurty0021/react-test npm test -- --coverage
+
+after_success:
+    - docker build -t kurty0021/multi-client ./client
+    - docker build -t kurty0021/multi-nginx ./nginx
+    - docker build -t kurty0021/multi-server ./server
+    - docker build -t kurty0021/multi-worker ./worker
+
+    #log into docker cli
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    #push images to docker hub
+    - docker push kurty0021/multi-client
+    - docker push kurty0021/multi-nginx
+    - docker push kurty0021/multi-server
+    - docker push kurty0021/multi-worker
